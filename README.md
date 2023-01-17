@@ -6,6 +6,6 @@
 
 ---
 
-Enable reading mode on Powerpyx's walktroughs and hide all clutter
+Enable focus mode on Powerpyx's walktroughs and hide all clutter
 
 <img src="https://raw.githubusercontent.com/robiningelbrecht/powerpyx-focus/master/images/readme.gif" alt="Example">
