@@ -20,5 +20,9 @@
         "128": "images/icon-128.png"
       }
     },
-    "permissions": ["activeTab", "scripting", "storage"]
+    "permissions": ["tabs", "scripting"],
+    "host_permissions": [
+      "http://*.powerpyx.com/*",
+      "https://*.powerpyx.com/*"
+    ]
   }
