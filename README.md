@@ -8,4 +8,8 @@
 
 Enable focus mode on Powerpyx's walktroughs and hide all clutter
 
-<img src="https://raw.githubusercontent.com/robiningelbrecht/powerpyx-focus/master/images/readme.gif" alt="Example">
+<h2>Focus mode disabled</h2>
+<img src="https://raw.githubusercontent.com/robiningelbrecht/powerpyx-focus/master/images/before.png" alt="Before">
+
+<h2>Focus mode enabled</h2>
+<img src="https://raw.githubusercontent.com/robiningelbrecht/powerpyx-focus/master/images/after.png" alt="After">
