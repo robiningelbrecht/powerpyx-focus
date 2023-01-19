@@ -11,15 +11,35 @@ div[class^="ns-"],
 div.vm-footer,
 #comments,
 #cto_banner_content,
-#respond{
+#respond {
     display: none !important;
     visibility: hidden !important;
     width: 0 !important;
     height: 0 !important;
 }
 
-main.content{
-    padding: 0;
-    width: 100%;
-    border-right: none;
+main.content {
+    padding: 0 !important;
+    width: 100% !important;
+    border-right: none !important;
+}
+
+/* DARK MODE */
+body.dark,
+body.dark main.content {
+    background-color: #1d1b1f !important;
+    color: #FFFBFE !important;
+}
+
+body.dark h1,
+body.dark h2,
+body.dark h3,
+body.dark h4,
+body.dark h5,
+body.dark h6 {
+    color: #FFFBFE !important;
+}
+
+body.dark div.breadcrumb {
+    background-color: #212529 !important;
 }
