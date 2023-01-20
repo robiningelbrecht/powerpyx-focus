@@ -6,7 +6,7 @@
 
 ---
 
-Enable focus mode on Powerpyx's walktroughs and hide all clutter
+Enable focus mode on Powerpyx's walkthroughs and hide all clutter
 
 <h2>Focus mode disabled</h2>
 <img src="https://raw.githubusercontent.com/robiningelbrecht/powerpyx-focus/master/images/before.png" alt="Before">

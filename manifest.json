@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "Powerpyx focus mode",
-  "description": "Enable reading mode on Powerpyx's walktroughs.",
-  "version": "1.0",
+  "description": "Enable focus mode on Powerpyx's walkthroughs and hide all clutter.",
+  "version": "0.0.0.1",
   "icons": {
     "16": "images/icon-16.png",
     "32": "images/icon-32.png",
