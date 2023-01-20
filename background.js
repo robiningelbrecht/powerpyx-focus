@@ -1,75 +1,126 @@
 chrome.runtime.onInstalled.addListener(async () => {
-  const settings = { enableDarkMode: false };
-  await setChromeStorageSync({ settings: settings });
+  await initialize();
+});
+
+chrome.management.onEnabled.addListener(async () => {
+  await initialize();
 });
 
 chrome.storage.onChanged.addListener((changes, area) => {
   if (area === "sync") {
     chrome.tabs.query({}, function (tabs) {
-      tabs.forEach((tab) => {
-        handleFocusMode(tab);
+      tabs.forEach(async (tab) => {
+        await applySettings(tab);
       });
     });
   }
 });
 
 chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
-  handleFocusMode(tab);
+  if (!urlMatchesPowerpyx(tab.url)) {
+    return;
+  }
+
+  await injectCss(tab);
+  await applySettings(tab);
+  await setIconStatus(tab);
 });
 
 chrome.tabs.onActivated.addListener(async (activeInfo) => {
   const tab = await chrome.tabs.get(activeInfo.tabId);
 
-  handleFocusMode(tab);
+  await setIconStatus(tab);
 });
 
-const handleFocusMode = async (tab) => {
-  if (
-    tab.url &&
-    tab.url !== "https://www.powerpyx.com/" &&
-    tab.url.startsWith("https://www.powerpyx.com/")
-  ) {
-    const settings = await getChromeStorageSync("settings");
+const initialize = async () => {
+  const settings = { enableDarkMode: false, enableFullWidth: false };
+  await setChromeStorageSync({ settings: settings });
 
-    await chrome.action.enable();
-    await chrome.action.setBadgeText({
-      text: "ON",
-      tabId: tab.id,
+  chrome.tabs.query({}, function (tabs) {
+    tabs.forEach(async (tab) => {
+      await injectCss(tab);
     });
-    await chrome.action.setBadgeBackgroundColor({
-      color: "#2a9d8f",
-      tabId: tab.id,
-    });
+  });
+};
 
-    await chrome.scripting.insertCSS({
-      files: ["focus-mode.css"],
+const injectCss = async (tab) => {
+  if (!urlMatchesPowerpyx(tab.url)) {
+    return;
+  }
+
+  await chrome.scripting.insertCSS({
+    files: ["focus-mode.css"],
+    target: { tabId: tab.id },
+  });
+};
+
+const applySettings = async (tab) => {
+  if (!urlMatchesPowerpyx(tab.url)) {
+    return;
+  }
+
+  const settings = await getChromeStorageSync("settings");
+  if (settings.enableDarkMode) {
+    await chrome.scripting.executeScript({
       target: { tabId: tab.id },
+      func: () => {
+        document.body.classList.add("dark");
+      },
     });
+  } else {
+    await chrome.scripting.executeScript({
+      target: { tabId: tab.id },
+      func: () => {
+        document.body.classList.remove("dark");
+      },
+    });
+  }
 
-    if (settings.enableDarkMode) {
-      chrome.scripting.executeScript({
-        target: { tabId: tab.id },
-        func: () => {
-          document.body.classList.add("dark");
-        },
-      });
-    } else {
-      chrome.scripting.executeScript({
-        target: { tabId: tab.id },
-        func: () => {
-          document.body.classList.remove("dark");
-        },
-      });
-    }
+  if (settings.enableFullWidth) {
+    await chrome.scripting.executeScript({
+      target: { tabId: tab.id },
+      func: () => {
+        document.body.classList.add("full-width");
+      },
+    });
+  } else {
+    await chrome.scripting.executeScript({
+      target: { tabId: tab.id },
+      func: () => {
+        document.body.classList.remove("full-width");
+      },
+    });
+  }
+};
+
+const setIconStatus = async (tab) => {
+  if (!urlMatchesPowerpyx(tab.url)) {
+    await chrome.action.disable();
+    await chrome.action.setBadgeText({
+      text: "",
+      tabId: tab.id,
+    });
 
     return;
   }
 
-  await chrome.action.disable();
+  await chrome.action.enable();
   await chrome.action.setBadgeText({
-    text: "",
+    text: "ON",
     tabId: tab.id,
   });
+  await chrome.action.setBadgeBackgroundColor({
+    color: "#2a9d8f",
+    tabId: tab.id,
+  });
+};
+
+const urlMatchesPowerpyx = (url) => {
+  return (
+    url &&
+    url !== "https://www.powerpyx.com/" &&
+    url.startsWith("https://www.powerpyx.com/")
+  );
 };
 
 const getChromeStorageSync = async function (key) {

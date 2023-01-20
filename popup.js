@@ -1,8 +1,12 @@
 const { settings } = await chrome.storage.sync.get("settings");
-const $enableDarkMode = document.querySelector("input#dark-mode");
-$enableDarkMode.checked = settings.enableDarkMode;
+const $checkboxes = document.querySelectorAll('input[type="checkbox"]');
 
-$enableDarkMode.addEventListener("change", async () => {
-  settings.enableDarkMode = !settings.enableDarkMode;
-  await chrome.storage.sync.set({ settings: settings });
+$checkboxes.forEach($checkbox => {
+  const settingName = $checkbox.id;
+  $checkbox.checked = settings[settingName];
+
+  $checkbox.addEventListener("change", async () => {
+    settings[settingName] = !settings[settingName];
+    await chrome.storage.sync.set({ settings: settings });
+  });
 });

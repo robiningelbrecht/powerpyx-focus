@@ -43,3 +43,8 @@ body.dark h6 {
 body.dark div.breadcrumb {
     background-color: #212529 !important;
 }
+
+/* FULL WIDTH */
+body.full-width .site-inner .wrap{
+    max-width: 95% !important;
+}
